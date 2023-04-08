@@ -7,6 +7,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CommentRepository::class)]
+#[ORM\HasLifecycleCallbacks]    // Наличие LifecycleCallbacks
 class Comment
 {
     #[ORM\Id]
@@ -36,6 +37,12 @@ class Comment
     public function __toString(): string
     {
         return (string) $this->getEmail();
+    }
+
+    #[ORM\PrePersist]  //Событие ORM\PrePersist срабатывает, когда объект впервые сохранятся в базе данных.
+    public function setCreatedAtValue()
+    {
+        $this->createdAt = new \DateTimeImmutable();
     }
 
 
